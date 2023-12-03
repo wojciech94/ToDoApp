@@ -1,0 +1,26 @@
+ul.custom {
+	list-style: none;
+}
+
+.custom li::before {
+	content: '\2022';
+	color: aliceblue;
+	font-weight: bold;
+	margin-right: 0.5rem;
+}
+
+.dark .custom li::before {
+	color: darkgrey;
+}
+
+.custom li.priority-low::before {
+	color: green;
+}
+
+.custom li.priority-mid::before {
+	color: yellow;
+}
+
+.custom li.priority-high::before {
+	color: red;
+}
