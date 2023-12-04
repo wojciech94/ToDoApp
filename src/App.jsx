@@ -79,7 +79,7 @@ function App() {
 	return (
 		<div className='bg-slate-200 dark:bg-slate-800'>
 			<div className='container-xl min-h-screen mx-auto flex flex-col items-center py-12'>
-				<div className='relative bg-slate-400 dark:bg-slate-600 rounded-xl p-8 px-12 border dark:text-gray-100 border-slate-500 w-3/6 min-w-[400px] max-w-[800px]'>
+				<div className='relative bg-slate-400 dark:bg-slate-600 rounded-xl p-4 md:py-8 md:px-12 border dark:text-gray-100 border-slate-500 w-3/6 min-w-[350px] max-w-[800px]'>
 					<button
 						className='themeBtn m-3 absolute top-0 right-0 hover:text-slate-200 dark:hover:text-slate-800'
 						onClick={() => setIsDropdownOpened(!isDropdownOpened)}>
@@ -137,8 +137,12 @@ function App() {
 							<option className='bg-red-600' value='high'>
 								Wysoki
 							</option>
-							<option className='bg-yellow-600' value='mid'>Średni</option>
-							<option className='bg-green-600' value='low'>Niski</option>
+							<option className='bg-yellow-600' value='mid'>
+								Średni
+							</option>
+							<option className='bg-green-600' value='low'>
+								Niski
+							</option>
 						</select>
 						<button
 							className='flex justify-center items-center bg-slate-800 border border-slate-800 flex-shrink-0 text-gray-100 font-bold rounded-md w-8 h-8  hover:bg-slate-200 hover:text-slate-800 transition-colors duration-200'
@@ -146,7 +150,7 @@ function App() {
 							<Plus></Plus>
 						</button>
 					</div>
-					<ul className='custom mt-3'>
+					<ul className='mt-3'>
 						{tasks.map(t => {
 							return (
 								<Task
