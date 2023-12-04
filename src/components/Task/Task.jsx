@@ -20,16 +20,16 @@ export function Task({
 
 	switch (priority) {
 		case 'low':
-			priorityBadge = 'green'
+			priorityBadge = 'bg-green-600'
 			break
 		case 'mid':
-			priorityBadge = 'yellow'
+			priorityBadge = 'bg-yellow-600'
 			break
 		case 'high':
-			priorityBadge = 'red'
+			priorityBadge = 'bg-red-600'
 			break
 		default:
-			priorityBadge = 'sky'
+			priorityBadge = 'bg-sky-600'
 			break
 	}
 
@@ -37,7 +37,7 @@ export function Task({
 		<li key={id} className='list-item list-none border-bottom'>
 			{isEdit ? (
 				<div className='flex flex-wrap items-center gap-2 border-slate-600 dark:border-slate-400 border-t py-2'>
-					<span className={`w-2 h-6 rounded-md bg-${priorityBadge}-600`}></span>
+					<span className={`w-2 h-6 rounded-md ${priorityBadge}`}></span>
 					<input
 						value={inputVal}
 						className='flex-grow px-2 py-1 rounded-md dark:text-gray-100 dark:bg-slate-900'
@@ -78,7 +78,7 @@ export function Task({
 				</div>
 			) : (
 				<div className='flex gap-2 items-center border-t border-t-slate-600 dark:border-t-slate-400'>
-					<span className={`w-2 h-6 rounded-md bg-${priorityBadge}-600`}></span>
+					<span className={`w-2 h-6 rounded-md ${priorityBadge}`}></span>
 					<input className='w-5 h-5' type='checkbox' checked={isDone} onChange={() => handleCheck(id)}></input>
 					<div className={`flex-grow font-semibold my-1 py-2 priority-${priority} ${isDone && 'line-through'}`}>
 						{title}
