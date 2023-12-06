@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Task } from './components/Task/Task'
-import { Plus, Sun, Moon, Monitor } from 'react-feather'
+import { Plus, Sun, Moon, Monitor, Settings } from 'react-feather'
 import { theme, saveToLocalStorage } from './utils/general'
 
 function App() {
@@ -8,7 +8,10 @@ function App() {
 	const [tasks, setTasks] = useState([])
 	const [priorityValue, setPriorityValue] = useState('')
 	const [isDropdownOpened, setIsDropdownOpened] = useState(false)
+	const [isSettingsOpened, setIsSettingsOpened] = useState(false)
 	const [appTheme, setAppTheme] = useState(theme)
+	const [sortType, setSortType] = useState('date')
+	const [order, setOrder] = useState('asc')
 
 	function createTask() {
 		if (inputVal != '') {
@@ -18,6 +21,7 @@ function App() {
 				isEdit: false,
 				isDone: false,
 				priority: priorityValue,
+				createdAt: Date.now(),
 			}
 			setTasks(prevTasks => [...prevTasks, taskObj])
 			setInputVal('')
@@ -63,6 +67,41 @@ function App() {
 		})
 	}
 
+	function sortByPriority() {
+		const sortedItems = prevTasks =>
+			[...prevTasks].sort((a, b) => {
+				const priorityOrder = { lowest: 0, low: 1, mid: 2, high: 3 }
+				const priorityA = priorityOrder[a.priority] || priorityOrder.lowest
+				const priorityB = priorityOrder[b.priority] || priorityOrder.lowest
+				if (order == 'desc') {
+					return priorityA - priorityB
+				} else {
+					return priorityB - priorityA
+				}
+			})
+		setTasks(sortedItems)
+	}
+
+	function sortByDate() {
+		const sortedItems = prevTasks =>
+			[...prevTasks].sort((a, b) => {
+				if (order == 'desc') {
+					return a.createdAt - b.createdAt
+				} else {
+					return b.createdAt - a.createdAt
+				}
+			})
+		setTasks(sortedItems)
+	}
+
+	function sortItems() {
+		if (sortType == 'priority') {
+			sortByPriority()
+		} else {
+			sortByDate()
+		}
+	}
+
 	const themeIcon = () => {
 		switch (appTheme) {
 			case 'system':
@@ -81,12 +120,78 @@ function App() {
 			<div className='container-xl min-h-screen mx-auto flex flex-col items-center py-12'>
 				<div className='relative bg-slate-400 dark:bg-slate-600 rounded-xl p-4 md:py-8 md:px-12 border dark:text-gray-100 border-slate-500 w-3/6 min-w-[350px] max-w-[800px]'>
 					<button
+						className='my-3 mx-12 absolute top-0 right-0 hover:text-slate-200 dark:hover:text-slate-800'
+						onClick={() => {
+							setIsSettingsOpened(!isSettingsOpened)
+							setIsDropdownOpened(false)
+						}}>
+						<Settings></Settings>
+					</button>
+					<button
 						className='themeBtn m-3 absolute top-0 right-0 hover:text-slate-200 dark:hover:text-slate-800'
-						onClick={() => setIsDropdownOpened(!isDropdownOpened)}>
+						onClick={() => {
+							setIsDropdownOpened(!isDropdownOpened)
+							setIsSettingsOpened(false)
+						}}>
 						{themeIcon()}
 					</button>
+					{isSettingsOpened && (
+						<div className='absolute flex flex-col gap-2 top-0 right-0 mt-11 me-12 p-2 rounded-md border border-slate-800 bg-slate-400 dark:bg-slate-600'>
+							<div className='text-slate-800 dark:text-slate-200 font-semibold'>Sortuj według</div>
+							<div className='flex gap-2'>
+								<input
+									type='radio'
+									name='type'
+									id='r1'
+									value='priority'
+									checked={sortType == 'priority'}
+									onChange={e => setSortType(e.target.value)}
+								/>
+								<label htmlFor='r1'>Priorytetu</label>
+							</div>
+							<div className='flex gap-2'>
+								<input
+									type='radio'
+									name='type'
+									id='r2'
+									value='date'
+									checked={sortType == 'date'}
+									onChange={e => setSortType(e.target.value)}
+								/>
+								<label htmlFor='r2'>Daty dodania</label>
+							</div>
+							<div className='text-slate-800 dark:text-slate-200 font-semibold'>Kolejność sortowania</div>
+							<div className='flex gap-2'>
+								<input
+									type='radio'
+									name='order'
+									value='asc'
+									id='s1'
+									checked={order == 'asc'}
+									onChange={e => setOrder(e.target.value)}
+								/>
+								<label htmlFor='s1'>Rosnąco</label>
+							</div>
+							<div className='flex gap-2'>
+								<input
+									type='radio'
+									name='order'
+									id='s2'
+									value='desc'
+									checked={order == 'desc'}
+									onChange={e => setOrder(e.target.value)}
+								/>
+								<label htmlFor='s2'>Malejąco</label>
+							</div>
+							<button
+								className='btn text-white rounded bg-green-500 hover:bg-green-600 dark:text-white'
+								onClick={sortItems}>
+								Zatwierdź
+							</button>
+						</div>
+					)}
 					{isDropdownOpened && (
-						<ul className='absolute flex gap-1 items-center mt-10 me-2 p-1 top-0 right-0 rounded-md border border-slate-800'>
+						<ul className='absolute flex gap-1 items-center mt-11 me-2 p-2 top-0 right-0 rounded-md border border-slate-800'>
 							<li className='h-6'>
 								<button
 									onClick={() => {

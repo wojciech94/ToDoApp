@@ -65,7 +65,6 @@ export function Task({
 							className='flex justify-center items-center bg-lime-200 border border-lime-900 text-lime-800 w-8 h-8 font-bold rounded-md hover:bg-lime-800 hover:text-lime-200 transition-colors duration-200'
 							onClick={() => {
 								handleSaveTask(id, inputVal, priorityValue)
-								setInputVal('')
 							}}>
 							<Check />
 						</button>
@@ -78,19 +77,23 @@ export function Task({
 				</div>
 			) : (
 				<div className='flex gap-2 items-center border-t border-t-slate-600 dark:border-t-slate-400'>
-					<span className={`w-2 h-6 rounded-md ${priorityBadge}`}></span>
-					<input className='w-5 h-5' type='checkbox' checked={isDone} onChange={() => handleCheck(id)}></input>
-					<div className={`flex-grow font-semibold my-1 py-2 priority-${priority} ${isDone && 'line-through'}`}>
+					<span className={`flex-shrink-0 w-2 h-6 rounded-md ${priorityBadge}`}></span>
+					<input
+						id='chbxDone'
+						className='flex-shrink-0 w-5 h-5'
+						type='checkbox'
+						checked={isDone}
+						onChange={() => handleCheck(id)}></input>
+					<label htmlFor='chbxDone' className={`flex-grow font-semibold my-1 py-2 ${isDone && 'line-through'}`}>
 						{title}
-					</div>
-
+					</label>
 					<button
-						className='flex justify-center items-center bg-blue-200 border border-blue-900 text-blue-800 w-8 h-8 font-bold rounded-md hover:bg-blue-800 hover:text-blue-200 transition-colors duration-200'
+						className='flex-shrink-0 flex justify-center items-center bg-blue-200 border border-blue-900 text-blue-800 w-8 h-8 font-bold rounded-md hover:bg-blue-800 hover:text-blue-200 transition-colors duration-200'
 						onClick={() => handleEditTask(id)}>
 						<Edit />
 					</button>
 					<button
-						className='flex justify-center items-center bg-red-200 border border-red-900 text-red-800 w-8 h-8 font-bold rounded-md hover:bg-red-800 hover:text-red-200 transition-colors duration-200'
+						className='flex-shrink-0 flex justify-center items-center bg-red-200 border border-red-900 text-red-800 w-8 h-8 font-bold rounded-md hover:bg-red-800 hover:text-red-200 transition-colors duration-200'
 						onClick={() => handleRemoveTask(id)}>
 						<X></X>
 					</button>
