@@ -15,9 +15,13 @@ if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color
 }
 
 export function getTasks() {
-	const tasks = [...JSON.parse(localStorage.getItem('tasks'))]
-	const filteredTasks = tasks.filter(t => validateExpirationTime(t.removeTime) === true)
-	return filteredTasks || []
+	if (localStorage.getItem('tasks')) {
+		const tasks = [...JSON.parse(localStorage.getItem('tasks'))]
+		const filteredTasks = tasks.filter(t => validateExpirationTime(t.removeTime) === true)
+		return filteredTasks || []
+	} else {
+		return []
+	}
 }
 
 export function saveTasksToLocalStorage(tasks) {
