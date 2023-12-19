@@ -9,6 +9,7 @@ export function Task({
 	isEdit,
 	isDone,
 	priority,
+	createdAt,
 	handleSaveTask,
 	handleCheck,
 	handleEditTask,
@@ -79,12 +80,14 @@ export function Task({
 				<div className='flex gap-2 items-center border-t border-t-slate-600 dark:border-t-slate-400'>
 					<span className={`flex-shrink-0 w-2 h-6 rounded-md ${priorityBadge}`}></span>
 					<input
-						id='chbxDone'
+						id={`chbxDone` + id}
 						className='flex-shrink-0 w-5 h-5'
 						type='checkbox'
 						checked={isDone}
 						onChange={() => handleCheck(id)}></input>
-					<label htmlFor='chbxDone' className={`flex-grow font-semibold my-1 py-2 ${isDone && 'line-through'}`}>
+					<label
+						htmlFor={`chbxDone` + id}
+						className={`flex-grow text-break font-semibold my-1 py-2 ${isDone && 'line-through'}`}>
 						{title}
 					</label>
 					<button

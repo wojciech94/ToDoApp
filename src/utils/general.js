@@ -1,3 +1,5 @@
+import { validateExpirationTime } from './timeHelper'
+
 export let theme
 
 if (localStorage.getItem('theme')) {
@@ -12,7 +14,17 @@ if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color
 	document.body.parentElement.className = 'dark'
 }
 
-export function saveToLocalStorage(mode) {
+export function getTasks() {
+	const tasks = [...JSON.parse(localStorage.getItem('tasks'))]
+	const filteredTasks = tasks.filter(t => validateExpirationTime(t.removeTime) === true)
+	return filteredTasks || []
+}
+
+export function saveTasksToLocalStorage(tasks) {
+	localStorage.setItem('tasks', JSON.stringify(tasks))
+}
+
+export function saveModeToLocalStorage(mode) {
 	if (mode === 'light') {
 		localStorage.setItem('theme', 'light')
 		document.body.parentElement.className = ''

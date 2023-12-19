@@ -1,17 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Task } from './components/Task/Task'
 import { Plus, Sun, Moon, Monitor, Settings } from 'react-feather'
-import { theme, saveToLocalStorage } from './utils/general'
+import { theme, saveModeToLocalStorage, saveTasksToLocalStorage, getTasks } from './utils/general'
+import { setNewDate } from './utils/timeHelper'
 
 function App() {
 	const [inputVal, setInputVal] = useState('')
-	const [tasks, setTasks] = useState([])
+	const [tasks, setTasks] = useState(getTasks())
 	const [priorityValue, setPriorityValue] = useState('')
 	const [isDropdownOpened, setIsDropdownOpened] = useState(false)
 	const [isSettingsOpened, setIsSettingsOpened] = useState(false)
+	const [archiveTime, setArchiveTime] = useState(1)
 	const [appTheme, setAppTheme] = useState(theme)
 	const [sortType, setSortType] = useState('date')
 	const [order, setOrder] = useState('asc')
+
+	useEffect(() => {
+		if (tasks) {
+			saveTasksToLocalStorage(tasks)
+		}
+	}, [tasks])
 
 	function createTask() {
 		if (inputVal != '') {
@@ -22,6 +30,8 @@ function App() {
 				isDone: false,
 				priority: priorityValue,
 				createdAt: Date.now(),
+				finishedAt: null,
+				removeTime: null,
 			}
 			setTasks(prevTasks => [...prevTasks, taskObj])
 			setInputVal('')
@@ -43,8 +53,10 @@ function App() {
 	const handleCheck = id => {
 		setTasks(prevTasks => {
 			return prevTasks.map(t => {
+				const finish = t.isDone === true ? null : Date.now()
+				const remove = t.isDone === true ? null : setNewDate(archiveTime)
 				if (t.id === id) {
-					return { ...t, isDone: !t.isDone }
+					return { ...t, isDone: !t.isDone, finishedAt: finish, removeTime: remove }
 				}
 				return t
 			})
@@ -73,7 +85,7 @@ function App() {
 				const priorityOrder = { lowest: 0, low: 1, mid: 2, high: 3 }
 				const priorityA = priorityOrder[a.priority] || priorityOrder.lowest
 				const priorityB = priorityOrder[b.priority] || priorityOrder.lowest
-				if (order == 'desc') {
+				if (order == 'asc') {
 					return priorityA - priorityB
 				} else {
 					return priorityB - priorityA
@@ -196,7 +208,7 @@ function App() {
 								<button
 									onClick={() => {
 										setAppTheme('light')
-										saveToLocalStorage('light')
+										saveModeToLocalStorage('light')
 										setIsDropdownOpened(false)
 									}}>
 									<Sun></Sun>
@@ -206,7 +218,7 @@ function App() {
 								<button
 									onClick={() => {
 										setAppTheme('dark')
-										saveToLocalStorage('dark')
+										saveModeToLocalStorage('dark')
 										setIsDropdownOpened(false)
 									}}>
 									<Moon></Moon>
@@ -216,7 +228,7 @@ function App() {
 								<button
 									onClick={() => {
 										setAppTheme('system')
-										saveToLocalStorage('system')
+										saveModeToLocalStorage('system')
 										setIsDropdownOpened(false)
 									}}>
 									<Monitor></Monitor>
@@ -265,6 +277,7 @@ function App() {
 									isEdit={t.isEdit}
 									isDone={t.isDone}
 									priority={t.priority}
+									createdAt={t.finishedAt}
 									handleSaveTask={handleSaveTask}
 									handleCheck={handleCheck}
 									handleRemoveTask={handleRemoveTask}
